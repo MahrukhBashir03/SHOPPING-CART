@@ -18,7 +18,7 @@
 
 <body>
     <div class="container">
-        <h1 class="title">Shopping Cart</h1>
+        <h1 class="title">SHOPPING CART</h1>
         <div class="cart">
             <table class="cart-table">
                 <thead>
@@ -30,65 +30,66 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="cart-items">
+                    <!-- Product Rows -->
                     <tr>
-                        <td>Stylish Shirt</td>
+                        <td><b>Stylish Shirt</b></td>
                         <td>PKR 1500</td>
                         <td><input type="number" class="quantity" value="1" min="1"></td>
                         <td>PKR 1500</td>
                         <td><button class="remove">Remove</button></td>
                     </tr>
                     <tr>
-                        <td>Elegant Dress</td>
+                        <td><b>Elegant Dress</b></td>
                         <td>PKR 2000</td>
                         <td><input type="number" class="quantity" value="1" min="1"></td>
                         <td>PKR 2000</td>
                         <td><button class="remove">Remove</button></td>
                     </tr>
                     <tr>
-                        <td>Simple Tshirts</td>
+                        <td><b>Simple Tshirts</b></td>
                         <td>PKR 1500</td>
                         <td><input type="number" class="quantity" value="1" min="1"></td>
                         <td>PKR 1500</td>
                         <td><button class="remove">Remove</button></td>
                     </tr>
                     <tr>
-                        <td>Classic Jeans</td>
+                        <td><b>Classic Jeans</b></td>
                         <td>PKR 1800</td>
                         <td><input type="number" class="quantity" value="1" min="1"></td>
                         <td>PKR 1800</td>
                         <td><button class="remove">Remove</button></td>
                     </tr>
                     <tr>
-                        <td>Casual Shoes</td>
+                        <td><b>Casual Shoes</b></td>
                         <td>PKR 2500</td>
                         <td><input type="number" class="quantity" value="1" min="1"></td>
                         <td>PKR 2500</td>
                         <td><button class="remove">Remove</button></td>
                     </tr>
                     <tr>
-                        <td>High Heels</td>
+                        <td><b>High Heels</b></td>
                         <td>PKR 5000</td>
                         <td><input type="number" class="quantity" value="1" min="1"></td>
                         <td>PKR 5000</td>
                         <td><button class="remove">Remove</button></td>
                     </tr>
                     <tr>
-                        <td>Long Boots</td>
+                        <td><b>Long Boots</b></td>
                         <td>PKR 4000</td>
                         <td><input type="number" class="quantity" value="1" min="1"></td>
                         <td>PKR 4000</td>
                         <td><button class="remove">Remove</button></td>
                     </tr>
                     <tr>
-                        <td>Sports Jacket</td>
+                        <td><b>Sports Jacket</b></td>
                         <td>PKR 3000</td>
                         <td><input type="number" class="quantity" value="1" min="1"></td>
                         <td>PKR 3000</td>
                         <td><button class="remove">Remove</button></td>
                     </tr>
                     <tr>
-                        <td>Leather Wallet</td>
+                        <td><b>Leather Wallet</b></td>
                         <td>PKR 1200</td>
                         <td><input type="number" class="quantity" value="1" min="1"></td>
                         <td>PKR 1200</td>
@@ -104,7 +105,48 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const checkoutButton = document.getElementById("checkout");
+            const cartItems = document.querySelectorAll("#cart-items tr");
+
+            const updateCartData = () => {
+                const cartData = [];
+                cartItems.forEach(row => {
+                    const product = row.cells[0].innerText.trim();
+                    const price = parseFloat(row.cells[1].innerText.replace("PKR", "").trim());
+                    const quantity = parseInt(row.querySelector(".quantity").value);
+                    const total = price * quantity;
+                    cartData.push({ product, price, quantity, total });
+                });
+                return cartData;
+            };
+
+            const updateSubtotal = () => {
+                let subtotal = 0;
+                cartItems.forEach(row => {
+                    const price = parseFloat(row.cells[1].innerText.replace("PKR", "").trim());
+                    const quantity = parseInt(row.querySelector(".quantity").value);
+                    const total = price * quantity;
+                    row.cells[3].innerText = `PKR ${total}`;
+                    subtotal += total;
+                });
+                document.getElementById("subtotal").innerText = `PKR ${subtotal}`;
+            };
+
+            document.querySelectorAll(".quantity").forEach(input => {
+                input.addEventListener("change", updateSubtotal);
+            });
+
+            checkoutButton.addEventListener("click", () => {
+                const cartData = updateCartData();
+                localStorage.setItem("cartData", JSON.stringify(cartData));
+                window.location.href = "checkout.html"; // Redirect to the checkout page
+            });
+
+            updateSubtotal();
+        });
+    </script>
 </body>
 
 </html>

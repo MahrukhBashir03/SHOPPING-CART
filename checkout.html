@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Checkout Page</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Google Web Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css">
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="title">Checkout</h1>
+        <div class="checkout-summary">
+            <h2>Order Summary</h2>
+            <table class="checkout-table">
+                <thead>
+                    <tr>
+                        <th><b>Product</b></th>
+                        <th><b>Price</b></th>
+                        <th><b>Quantity</b></th>
+                        <th><b>Total</b></th>
+                    </tr>
+                </thead>
+                <tbody id="checkout-items">
+                    <!-- Items will be dynamically added here -->
+                </tbody>
+            </table>
+            <div class="total-section">
+                <p><b>GRAND TOTAL:</b> <span id="grand-total">PKR 0</span></p>
+            </div>
+            <button id="place-order">Place Order</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const checkoutItemsContainer = document.getElementById("checkout-items");
+            const grandTotalElement = document.getElementById("grand-total");
+            const cartData = JSON.parse(localStorage.getItem("cartData")) || [];
+
+            let grandTotal = 0;
+
+            cartData.forEach(item => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.product}</td>
+                    <td>PKR ${item.price}</td>
+                    <td>${item.quantity}</td>
+                    <td>PKR ${item.total}</td>
+                `;
+                grandTotal += item.total;
+                checkoutItemsContainer.appendChild(row);
+            });
+
+            grandTotalElement.innerText = `PKR ${grandTotal}`;
+
+            const placeOrderButton = document.getElementById("place-order");
+            placeOrderButton.addEventListener("click", () => {
+                alert("Your order has been placed successfully!");
+                localStorage.removeItem("cartData");
+                window.location.href = "index.html"; // Redirect back to the cart page
+            });
+        });
+    </script>
+</body>
+
+</html>
